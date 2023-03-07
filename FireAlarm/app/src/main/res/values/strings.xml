@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Fire Alarm</string>
+    <string name="app_name_emoji">&#128293; Fire Alarm &#128293;</string>
+    <string name="login">Log in</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="register">Register</string>
+    <string name="log_in_existent_account">Already have an account? Log in</string>
+    <string name="create_new_account">Don\'t have an account? Register</string>
+    <string name="logout">Log out</string>
+    <string name="default_notification_channel_id">fcm_default_channel</string>
+    <string name="default_notification_channel_name">Fire Alarm</string>
+    <string name="default_notification_channel_description">Fire Alarm</string>
+    <string name="fire_alert_history">Fire Alert History</string>
+</resources>

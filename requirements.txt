@@ -1,0 +1,5 @@
+ultralytics
+geocoder
+haversine
+opencv-python
+streamlit

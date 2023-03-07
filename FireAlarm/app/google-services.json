@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "426466107847",
+    "project_id": "fire-alarm-1f423",
+    "storage_bucket": "fire-alarm-1f423.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:426466107847:android:524982b1e7c634c4ae79e2",
+        "android_client_info": {
+          "package_name": "com.mta.firealarm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "426466107847-eaqvsi7ajc7mdmqi7qbq38v9letda1ta.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzKLMZUpzL6fNbXP4fHz9Q17ELicQID-Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "426466107847-eaqvsi7ajc7mdmqi7qbq38v9letda1ta.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

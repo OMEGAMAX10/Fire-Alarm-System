@@ -1,0 +1,10 @@
+## Creare mediu virtual Python
+python3 -m venv venv_fire
+source venv_fire/bin/activate
+pip install ultralytics
+
+## Antrenare din linia de comanda a retelei neuronale folosite in detectarea incendiilor
+nohup yolo task=detect mode=train model=yolov8s.pt data=data.yaml epochs=300 imgsz=640 device=0,1,2,3,4,5,6,7 &
+disown %1
+tail -f -n500 nohup.out
+
