@@ -4,11 +4,13 @@ public class Alert {
     private String eventType;
     private String source;
     private String timestamp;
+    private String imageUrl;
 
-    public Alert(String eventType, String source, String timestamp) {
+    public Alert(String eventType, String source, String timestamp, String imageUrl) {
         this.eventType = eventType;
         this.source = source;
         this.timestamp = timestamp;
+        this.imageUrl = imageUrl;
     }
 
     public String getEventType() {
@@ -33,5 +35,13 @@ public class Alert {
 
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

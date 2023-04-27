@@ -1,3 +1,4 @@
+import os
 import cv2
 import geocoder
 import datetime
@@ -7,13 +8,14 @@ import firebase_admin
 from firebase_admin import credentials, messaging, db
 
 
-def firebase_send_alert(message):
-    g = geocoder.ip('me')
-    # g = geocoder.ip('8.8.8.8')  # Google's DNS server, for testing
+def firebase_send_alert(message, image_url):
+    # g = geocoder.ip('me')
+    g = geocoder.ip('8.8.8.8')  # Google's DNS server, for testing
     message = messaging.Message(
         notification=messaging.Notification(
             title='Fire Alert',
             body=message,
+            image=image_url,
         ),
         topic='fireAlarm',
         data={
@@ -54,6 +56,8 @@ def limit_firebase_db(limit=5000):
 
 
 try:
+    if not os.path.exists("static"):
+        os.makedirs("static")
     cred = credentials.Certificate("fire-alarm-key.json")
     if not firebase_admin._apps:
         firebase_admin.initialize_app(cred, {
@@ -85,33 +89,38 @@ try:
                     st.error("Failed to capture stream from this camera stream. Please try again.")
                     break
                 results = model.predict(image)
+                image = results[0].plot()
+                img_filename = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S.jpg")
                 if results[0].boxes.shape[0] > 0:
                     if not is_fire:
                         is_fire = True
+                        cv2.imwrite(f"./static/{img_filename}", image)
                         # get current date and time and format it with month in words
                         formatted_date = datetime.datetime.now().strftime("%B %d, %Y at %H:%M")
-                        firebase_send_alert(f'🔥A fire broke out in the area on {formatted_date}!')
+                        firebase_send_alert(f'🔥A fire broke out in the area on {formatted_date}!', f'http://172.20.10.3:8501/app/static/{img_filename}')
                         print("Fire detected!")
                         fire_history_json = {
                             "event": "Fire detected",
                             "source": CAM_ID,
-                            "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                            "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                            "image_url": f'http://172.20.10.3:8501/app/static/{img_filename}',
                         }
                         write_to_firebase_db(fire_history_json)
                 else:
                     if is_fire:
                         is_fire = False
+                        cv2.imwrite(f"./static/{img_filename}", image)
                         # get current date and time and format it with month in words
                         formatted_date = datetime.datetime.now().strftime("%B %d, %Y at %H:%M")
-                        firebase_send_alert(f'🚒The fire in the area was extinguished on {formatted_date}!')
+                        firebase_send_alert(f'🚒The fire in the area was extinguished on {formatted_date}!', f'http://172.20.10.3:8501/app/static/{img_filename}')
                         print("Fire extinguished!")
                         fire_history_json = {
                             "event": "Fire extinguished",
                             "source": CAM_ID,
-                            "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                            "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                            "image_url": f'http://172.20.10.3:8501/app/static/{img_filename}',
                         }
                         write_to_firebase_db(fire_history_json)
-                image = results[0].plot()
                 FRAME_WINDOW.image(image, channels="BGR", width=1280)
             cam.release()
     with tab_history:

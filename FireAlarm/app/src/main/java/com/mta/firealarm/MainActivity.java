@@ -8,15 +8,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.annotation.GlideModule;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -96,7 +100,8 @@ public class MainActivity extends AppCompatActivity {
                     Alert alert = new Alert(
                             Objects.requireNonNull(dataSnapshot.child("event").getValue()).toString(),
                             Objects.requireNonNull(dataSnapshot.child("source").getValue()).toString(),
-                            Objects.requireNonNull(dataSnapshot.child("timestamp").getValue()).toString()
+                            Objects.requireNonNull(dataSnapshot.child("timestamp").getValue()).toString(),
+                            Objects.requireNonNull(dataSnapshot.child("image_url").getValue()).toString()
                     );
                     // add the alert to the list at the beginning
                     alertArrayList.add(0, alert);
@@ -126,5 +131,17 @@ public class MainActivity extends AppCompatActivity {
         listView = findViewById(R.id.alertHistory);
         AlertHistoryAdapter adapter = new AlertHistoryAdapter(this, alertArrayList);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            Alert alert = alertArrayList.get(position);
+            // create alert dialog that contains the image of the alert
+            ImageView imageView = new ImageView(this);
+            Glide.with(this).load(alert.getImageUrl()).placeholder(R.drawable.flame_icon_large).error(android.R.drawable.stat_notify_error).into(imageView);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(alert.getEventType());
+            builder.setMessage("Source " + alert.getSource() + " at " + alert.getTimestamp());
+            builder.setView(imageView);
+            builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
+            builder.create().show();
+        });
     }
 }
